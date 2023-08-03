@@ -67,7 +67,7 @@ instance Arbitrary Version where
     where semver = SemVer <$> arbitrary
                           <*> arbitrary
                           <*> arbitrary
-                          <*> pure []
+                          <*> pure Nothing
                           <*> pure Nothing
 
 instance Lift Version where
