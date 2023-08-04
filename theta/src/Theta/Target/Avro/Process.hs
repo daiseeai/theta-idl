@@ -10,14 +10,12 @@ import           Control.Monad.IO.Class            (MonadIO (liftIO))
 
 import qualified Data.ByteString.Lazy              as LBS
 
-import qualified Streamly.Prelude                  as Streamly
+import qualified Streamly.Data.Stream.Prelude      as Streamly
 
 import qualified Streamly.External.ByteString.Lazy as SBS
 import qualified Streamly.System.Process           as Streamly
 
 
-import           Control.Monad
-import           Control.Monad.Trans               (lift)
 import           Theta.Error                       (Error)
 import           Theta.Target.Haskell.Conversion   (FromTheta, ToTheta,
                                                     decodeAvro, decodeAvro',
@@ -42,7 +40,7 @@ run :: (ToTheta a, FromTheta b, MonadIO m, MonadError Error m)
 run executable args input = do
   let inputStream = SBS.toChunks (encodeAvro input)
   out <- liftIO $ SBS.fromChunksIO $
-    Streamly.processChunks executable args inputStream
+    Streamly.pipeChunks executable args inputStream
   decodeAvro out
 
 -- | Run an external process, streaming in values of type @a@ and
@@ -57,14 +55,14 @@ stream :: (ToTheta a, FromTheta b)
        -- ^ Path to the executable to run.
        -> [String]
        -- ^ Arguments for the executable.
-       -> Streamly.SerialT IO a
+       -> Streamly.Stream IO a
        -- ^ Stream of inputs that can be encoded to Avro with Theta.
-       -> Streamly.SerialT IO b
+       -> Streamly.Stream IO b
 stream executable args inputs = decodeFromChunks $
-  Streamly.processChunks executable args encoded
-  where encoded = SBS.toChunks . encodeAvro =<< inputs
+  Streamly.pipeChunks executable args encoded
+  where encoded = Streamly.concatMap (SBS.toChunks . encodeAvro) inputs
 
-        decodeFromChunks chunks = join $ lift $
+        decodeFromChunks chunks = Streamly.concatEffect $
           Streamly.unfoldrM decodeChunk <$> SBS.fromChunksIO chunks
 
         decodeChunk bytes
