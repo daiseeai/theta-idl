@@ -31,7 +31,7 @@ common shared
 
                -- turn off warning from C preprocess on macOS
                -optP-Wno-nonportable-include-path
-  build-depends: base >=4.13 && <4.17
+  build-depends: base >=4.13 && <4.18
 
                , aeson
                , aeson-pretty >=0.8.9 && <0.9
