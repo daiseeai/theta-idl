@@ -17,7 +17,7 @@ import           Test.QuickCheck.Monadic         (monadicIO)
 import           Test.Tasty                      (TestTree, testGroup)
 import           Test.Tasty.QuickCheck           (forAll, listOf, testProperty)
 
-import qualified Streamly.Prelude                as Streamly
+import qualified Streamly.Data.Stream.Prelude    as Streamly
 
 import           Theta.Test.Assertions           (assertDiff)
 
