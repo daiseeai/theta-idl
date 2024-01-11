@@ -9,7 +9,8 @@ module Test.Theta.Target.Avro.Process where
 
 
 import           Control.Monad                   (forM_)
-import           Control.Monad.Except            (MonadIO (liftIO), runExceptT)
+import           Control.Monad.Except            (runExceptT)
+import           Control.Monad.IO.Class          (liftIO)
 
 import qualified Data.Text                       as Text
 

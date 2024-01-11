@@ -38,6 +38,7 @@ module Theta.Target.Avro.Types
 where
 
 import           Control.DeepSeq            (liftRnf)
+import           Control.Monad              ((<$!>), when, replicateM)
 import           Control.Monad.Except
 import           Control.Monad.State.Strict
 

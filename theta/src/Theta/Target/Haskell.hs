@@ -58,6 +58,7 @@ module Theta.Target.Haskell
   )
 where
 
+import           Control.Monad                   (replicateM)
 import           Control.Monad.Except
 import           Control.Monad.State             (evalState, evalStateT, get,
                                                   put)
